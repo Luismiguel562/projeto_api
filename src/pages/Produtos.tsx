@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import {
   Box,
-  Container,
   Card,
-  CardContent,
   CardMedia,
   Typography,
   Button,
@@ -50,8 +48,8 @@ const Produtos = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
         height: '100vh',
+        display: 'flex',
         backgroundColor: '#f4f4f4',
         fontFamily: 'Roboto, Arial, sans-serif',
       }}
@@ -60,42 +58,44 @@ const Produtos = () => {
       <Box
         sx={{
           width: 240,
-          backgroundColor: '#ffffff',
+          backgroundColor: '#fff',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           p: 2,
           boxShadow: 3,
         }}
       >
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            mb: 2,
+          }}
+        >
           <Avatar sx={{ bgcolor: '#1976d2', mb: 1 }}>U</Avatar>
-          <Typography variant="subtitle1" fontWeight="bold" color="text.primary">
+          <Typography
+            variant="subtitle1"
+            fontWeight="bold"
+            color="text.primary"
+            textAlign="center"
+          >
             Usuário
           </Typography>
         </Box>
 
-        <Box sx={{ width: '100%' }}>
-          <Divider sx={{ my: 2 }} />
-          <Button
-            variant="outlined"
-            color="error"
-            fullWidth
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        </Box>
+        <Button variant="outlined" color="error" fullWidth onClick={handleLogout}>
+          Logout
+        </Button>
       </Box>
 
-      {/* Conteúdo principal */}
+      {/* Lista de produtos */}
       <Box
         sx={{
           flexGrow: 1,
           overflowY: 'auto',
           p: 4,
-          backgroundColor: '#f4f4f4',
         }}
       >
         <Typography variant="h4" gutterBottom color="text.primary">
