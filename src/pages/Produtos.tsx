@@ -4,12 +4,16 @@ import {
   Card,
   CardMedia,
   Typography,
-  Button,
-  Avatar,
-  Divider,
   IconButton,
+  Grid,
+  TextField,
+  InputAdornment,
 } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
 import api from '../api/api';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +28,7 @@ interface Produto {
 
 const Produtos = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -42,109 +47,125 @@ const Produtos = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/login'); // Redireciona para o login após logout
+  };
+
+  const filteredProdutos = produtos.filter((produto) =>
+    produto.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleProdutoClick = (id: number) => {
+    navigate(`/produtos/${id}`);
+
   };
 
   return (
     <Box
       sx={{
-        height: '100vh',
-        display: 'flex',
+        minHeight: '100vh',
         backgroundColor: '#f4f4f4',
-        fontFamily: 'Roboto, Arial, sans-serif',
+        pt: 2,
+        pb: '80px', // espaço para a barra inferior
+        boxSizing: 'border-box',
       }}
     >
-      {/* Sidebar esquerda */}
+      {/* Header fixo */}
       <Box
+        component="header"
         sx={{
-          width: 240,
-          backgroundColor: '#fff',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 60,
+          bgcolor: '#fff',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
-          p: 2,
-          boxShadow: 3,
+          px: 2,
+          gap: 2,
+          zIndex: 1300,
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            mb: 2,
-          }}
+        <IconButton
+          aria-label="logout"
+          onClick={handleLogout}
+          color="primary"
+          sx={{ mr: 1 }}
         >
-          <Avatar sx={{ bgcolor: '#1976d2', mb: 1 }}>U</Avatar>
-          <Typography
-            variant="subtitle1"
-            fontWeight="bold"
-            color="text.primary"
-            textAlign="center"
-          >
-            Usuário
-          </Typography>
-        </Box>
+          <LogoutIcon fontSize="medium" />
+        </IconButton>
 
-        <Button variant="outlined" color="error" fullWidth onClick={handleLogout}>
-          Logout
-        </Button>
+        <TextField
+          placeholder="Pesquisar produtos..."
+          variant="outlined"
+          size="small"
+          fullWidth
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
       </Box>
 
       {/* Lista de produtos */}
-      <Box
-        sx={{
-          flexGrow: 1,
-          overflowY: 'auto',
-          p: 4,
-        }}
-      >
-        <Typography variant="h4" gutterBottom color="text.primary">
-          Lista de Produtos
-        </Typography>
-
-        {produtos.map((produto) => (
-          <Card
-            key={produto.id}
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              mb: 3,
-              p: 2,
-              backgroundColor: '#fff',
-              boxShadow: 2,
-              borderRadius: 2,
-            }}
-          >
-            <Box sx={{ flex: 1, pr: 2 }}>
-              <Typography variant="h6" color="text.primary">
-                {produto.title}
-              </Typography>
-              <Typography variant="body2" sx={{ my: 1 }} color="text.secondary">
-                {produto.description}
-              </Typography>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography variant="body1" fontWeight="bold" color="text.primary">
+      <Grid container spacing={2} sx={{ p: 2, pt: '80px' }}>
+        {filteredProdutos.map((produto) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={produto.id}>
+            <Card
+              onClick={() => handleProdutoClick(produto.id)}
+              sx={{ cursor: 'pointer', height: '100%' }}
+            >
+              <CardMedia
+                component="img"
+                height="200"
+                image={produto.image}
+                alt={produto.title}
+                sx={{ objectFit: 'contain', p: 2 }}
+              />
+              <Box sx={{ p: 2 }}>
+                <Typography variant="h6" noWrap>
+                  {produto.title}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
                   R$ {produto.price.toFixed(2)}
                 </Typography>
-                <IconButton color="primary" aria-label="adicionar ao carrinho">
-                  <ShoppingCartIcon />
-                </IconButton>
               </Box>
-            </Box>
-
-            <CardMedia
-              component="img"
-              image={produto.image}
-              alt={produto.title}
-              sx={{
-                width: 100,
-                height: 100,
-                objectFit: 'contain',
-              }}
-            />
-          </Card>
+            </Card>
+          </Grid>
         ))}
+      </Grid>
+
+      {/* Barra inferior fixa */}
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: 60,
+          bgcolor: 'white',
+          boxShadow: '0 -2px 5px rgba(0,0,0,0.1)',
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          zIndex: 1300,
+        }}
+      >
+        <IconButton color="primary" aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+        <IconButton color="primary" aria-label="carrinho">
+          <ShoppingCartIcon />
+        </IconButton>
+        <IconButton color="primary" aria-label="usuário">
+          <AccountCircleIcon />
+        </IconButton>
       </Box>
     </Box>
   );

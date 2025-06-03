@@ -5,12 +5,12 @@ import {
   Button,
   Typography,
   Box,
-  Alert,
-  InputAdornment,
   Paper,
+  InputAdornment,
   Checkbox,
   FormControlLabel,
   Link,
+  Alert,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
@@ -38,42 +38,70 @@ const Login = () => {
   };
 
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        backgroundImage: `
-          linear-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.2)),
-          url('/marmore-verde.jpg')
-        `,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontFamily: "'Roboto', sans-serif",
-        padding: 2,
-      }}
-    >
-      <Container maxWidth="xs">
+    <>
+      {/* Fundo azul escuro com efeito sutil */}
+      <Box
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          background: 'linear-gradient(135deg, #0D1B2A, #1B263B)', // azul escuro
+          overflow: 'hidden',
+          zIndex: -1,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: '-30%',
+            left: '-30%',
+            width: '160%',
+            height: '160%',
+            background:
+              'radial-gradient(circle at 25% 25%, rgba(0,0,0,0.06) 0%, transparent 50%),' +
+              'radial-gradient(circle at 75% 75%, rgba(0,0,0,0.06) 0%, transparent 50%)',
+            animation: 'rotate 90s linear infinite',
+            zIndex: -1,
+          },
+          '@keyframes rotate': {
+            '0%': { transform: 'rotate(0deg)' },
+            '100%': { transform: 'rotate(360deg)' },
+          },
+        }}
+      />
+
+      <Container
+        maxWidth="xs"
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          px: 2,
+          fontFamily: "'Roboto', sans-serif",
+        }}
+      >
         <Paper
-          elevation={4}
+          elevation={12}
           sx={{
-            p: 4,
-            borderRadius: 3,
-            bgcolor: '#ffffffdd',
-            backdropFilter: 'blur(8px)',
-            boxShadow: '0 8px 20px rgba(0,0,0,0.15)',
+            p: { xs: 3, sm: 5 },
+            borderRadius: 4,
+            bgcolor: '#fff',
+            boxShadow: '0 12px 30px rgba(0,0,0,0.3)',
+            width: '100%',
+            border: '3px solid #000',
+            color: '#000',
+            maxWidth: 400,
           }}
         >
           <Typography
-            variant="h5"
+            variant="h4"
             align="center"
             sx={{
               fontWeight: 700,
-              mb: 3,
-              color: '#2e7d32',
-              letterSpacing: '0.5px',
+              mb: { xs: 3, sm: 4 },
+              color: '#000', // título preto
+              letterSpacing: '1.5px',
             }}
           >
             AppStore
@@ -92,9 +120,18 @@ const Login = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <PersonIcon />
+                    <PersonIcon sx={{ color: '#000' }} />
                   </InputAdornment>
                 ),
+              }}
+              sx={{
+                '& label': { color: '#000' }, // label preto
+                '& input': { color: '#000' }, // texto do input preto
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#000' },
+                  '&:hover fieldset': { borderColor: '#333' },
+                  '&.Mui-focused fieldset': { borderColor: '#333' },
+                },
               }}
             />
 
@@ -110,13 +147,21 @@ const Login = () => {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <LockIcon />
+                    <LockIcon sx={{ color: '#000' }} />
                   </InputAdornment>
                 ),
               }}
+              sx={{
+                '& label': { color: '#000' }, // label preto
+                '& input': { color: '#000' }, // texto do input preto
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': { borderColor: '#000' },
+                  '&:hover fieldset': { borderColor: '#333' },
+                  '&.Mui-focused fieldset': { borderColor: '#333' },
+                },
+              }}
             />
 
-            {/* Lembrar de mim + redefinir */}
             <Box
               sx={{
                 display: 'flex',
@@ -124,6 +169,9 @@ const Login = () => {
                 alignItems: 'center',
                 mt: 1,
                 mb: 2,
+                flexWrap: 'wrap',
+                gap: 1,
+                color: '#000', // texto preto para label e link
               }}
             >
               <FormControlLabel
@@ -132,14 +180,16 @@ const Login = () => {
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                     size="small"
+                    sx={{ color: '#000', '&.Mui-checked': { color: '#333' } }}
                   />
                 }
                 label="Lembrar de mim"
+                sx={{ color: '#000' }} // texto preto
               />
               <Link
                 href="#"
                 underline="hover"
-                sx={{ fontSize: '0.9rem', color: '#2e7d32', fontWeight: 500 }}
+                sx={{ fontSize: '0.9rem', color: '#000', fontWeight: 500 }}
               >
                 Redefinir senha
               </Link>
@@ -158,13 +208,14 @@ const Login = () => {
               sx={{
                 mt: 2,
                 py: 1.6,
-                backgroundColor: '#43a047',
+                backgroundColor: '#1E90FF',
                 fontWeight: 600,
                 fontSize: '1rem',
                 borderRadius: 2,
                 '&:hover': {
-                  backgroundColor: '#2e7d32',
+                  backgroundColor: '#104E8B',
                 },
+                color: '#fff', // texto branco no botão
               }}
             >
               ENTRAR
@@ -172,7 +223,7 @@ const Login = () => {
           </Box>
         </Paper>
       </Container>
-    </Box>
+    </>
   );
 };
 
