@@ -9,7 +9,8 @@ import {
   FormControlLabel,
   Alert,
   Paper,
-} from '@mui/material';
+  Link,
+} from '@mui/material'; // adicionei Link do MUI
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -25,7 +26,6 @@ const Login = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Captura erro vindo da rota privada
   useEffect(() => {
     if (location.state?.error) {
       setError(location.state.error);
@@ -41,6 +41,13 @@ const Login = () => {
     } catch {
       setError('Usuário ou senha inválidos');
     }
+  };
+
+  // Função para "Esqueci minha senha"
+  const handleForgotPassword = (e: React.MouseEvent) => {
+    e.preventDefault();
+    alert('Aqui você pode implementar a recuperação de senha.');
+    // Exemplo: redirecionar -> navigate('/recuperar-senha');
   };
 
   return (
@@ -104,10 +111,7 @@ const Login = () => {
 
           <FormControlLabel
             control={
-              <Checkbox
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-              />
+              <Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />
             }
             label="Lembrar de mim"
             sx={{ mt: 1 }}
@@ -121,6 +125,13 @@ const Login = () => {
           >
             Entrar
           </Button>
+
+          {/* Link "Esqueci minha senha" */}
+          <Box sx={{ mt: 2, textAlign: 'center' }}>
+            <Link href="#" onClick={handleForgotPassword} underline="hover" sx={{ cursor: 'pointer' }}>
+              Esqueci minha senha
+            </Link>
+          </Box>
         </form>
       </Paper>
     </Box>

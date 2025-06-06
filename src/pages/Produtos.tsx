@@ -34,15 +34,43 @@ const Produtos = () => {
 
   useEffect(() => {
     const fetchProdutos = async () => {
-      try {
-        const response = await api.get('/products');
-        setProdutos(response.data);
-      } catch (error) {
-        console.error('Erro ao buscar produtos:', error);
+      // Se estiver online, tenta buscar da API
+      if (navigator.onLine) {
+        try {
+          const response = await api.get('/products');
+          setProdutos(response.data);
+          // Salva no cache local para usar offline
+          localStorage.setItem('produtosCache', JSON.stringify(response.data));
+        } catch (error) {
+          console.error('Erro ao buscar produtos:', error);
+          // Se erro na API, tenta pegar do cache
+          const cache = localStorage.getItem('produtosCache');
+          if (cache) setProdutos(JSON.parse(cache));
+        }
+      } else {
+        // Offline: busca do cache local
+        const cache = localStorage.getItem('produtosCache');
+        if (cache) {
+          setProdutos(JSON.parse(cache));
+        } else {
+          // Se não tiver cache, avisa e limpa a lista
+          setProdutos([]);
+          console.warn('Nenhum dado em cache disponível');
+        }
       }
     };
 
     fetchProdutos();
+
+    // Opcional: ouvir mudanças na conexão para atualizar a lista
+    function handleOnline() {
+      fetchProdutos();
+    }
+    window.addEventListener('online', handleOnline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -56,7 +84,6 @@ const Produtos = () => {
 
   const handleProdutoClick = (id: number) => {
     navigate(`/produtos/${id}`);
-
   };
 
   return (
@@ -115,30 +142,36 @@ const Produtos = () => {
 
       {/* Lista de produtos */}
       <Grid container spacing={2} sx={{ p: 2, pt: '80px' }}>
-        {filteredProdutos.map((produto) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={produto.id}>
-            <Card
-              onClick={() => handleProdutoClick(produto.id)}
-              sx={{ cursor: 'pointer', height: '100%' }}
-            >
-              <CardMedia
-                component="img"
-                height="200"
-                image={produto.image}
-                alt={produto.title}
-                sx={{ objectFit: 'contain', p: 2 }}
-              />
-              <Box sx={{ p: 2 }}>
-                <Typography variant="h6" noWrap>
-                  {produto.title}
-                </Typography>
-                <Typography variant="body1" color="text.secondary">
-                  R$ {produto.price.toFixed(2)}
-                </Typography>
-              </Box>
-            </Card>
-          </Grid>
-        ))}
+        {filteredProdutos.length === 0 ? (
+          <Typography sx={{ p: 2 }} variant="body1" align="center" color="text.secondary">
+            Nenhum produto encontrado ou sem conexão.
+          </Typography>
+        ) : (
+          filteredProdutos.map((produto) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={produto.id}>
+              <Card
+                onClick={() => handleProdutoClick(produto.id)}
+                sx={{ cursor: 'pointer', height: '100%' }}
+              >
+                <CardMedia
+                  component="img"
+                  height="200"
+                  image={produto.image}
+                  alt={produto.title}
+                  sx={{ objectFit: 'contain', p: 2 }}
+                />
+                <Box sx={{ p: 2 }}>
+                  <Typography variant="h6" noWrap>
+                    {produto.title}
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    R$ {produto.price.toFixed(2)}
+                  </Typography>
+                </Box>
+              </Card>
+            </Grid>
+          ))
+        )}
       </Grid>
 
       {/* Barra inferior fixa */}
