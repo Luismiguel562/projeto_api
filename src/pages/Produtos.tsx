@@ -14,6 +14,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import api from '../api/api';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -29,53 +30,60 @@ interface Produto {
 const Produtos = () => {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const { logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProdutos = async () => {
-      // Se estiver online, tenta buscar da API
       if (navigator.onLine) {
         try {
           const response = await api.get('/products');
           setProdutos(response.data);
-          // Salva no cache local para usar offline
           localStorage.setItem('produtosCache', JSON.stringify(response.data));
+          setIsOffline(false);
         } catch (error) {
           console.error('Erro ao buscar produtos:', error);
-          // Se erro na API, tenta pegar do cache
           const cache = localStorage.getItem('produtosCache');
-          if (cache) setProdutos(JSON.parse(cache));
+          if (cache) {
+            setProdutos(JSON.parse(cache));
+            setIsOffline(true);
+          }
         }
       } else {
-        // Offline: busca do cache local
         const cache = localStorage.getItem('produtosCache');
         if (cache) {
           setProdutos(JSON.parse(cache));
         } else {
-          // Se não tiver cache, avisa e limpa a lista
           setProdutos([]);
-          console.warn('Nenhum dado em cache disponível');
         }
+        setIsOffline(true);
       }
     };
 
     fetchProdutos();
 
-    // Opcional: ouvir mudanças na conexão para atualizar a lista
-    function handleOnline() {
+    const handleOnline = () => {
+      setIsOffline(false);
       fetchProdutos();
-    }
+    };
+
+    const handleOffline = () => {
+      setIsOffline(true);
+    };
+
     window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
       window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
   const handleLogout = () => {
     logout();
-    navigate('/login'); // Redireciona para o login após logout
+    navigate('/login');
   };
 
   const filteredProdutos = produtos.filter((produto) =>
@@ -92,7 +100,7 @@ const Produtos = () => {
         minHeight: '100vh',
         backgroundColor: '#f4f4f4',
         pt: 2,
-        pb: '80px', // espaço para a barra inferior
+        pb: '80px',
         boxSizing: 'border-box',
       }}
     >
@@ -140,8 +148,32 @@ const Produtos = () => {
         />
       </Box>
 
+      {/* Aviso Offline */}
+      {isOffline && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 60,
+            left: 0,
+            right: 0,
+            bgcolor: '#FFF3CD',
+            color: '#856404',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 1,
+            p: 1,
+            zIndex: 1400,
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          }}
+        >
+          <WarningAmberIcon />
+         Você está sem acesso à internet. Os produtos estão sendo exibidos no modo offline.
+        </Box>
+      )}
+
       {/* Lista de produtos */}
-      <Grid container spacing={2} sx={{ p: 2, pt: '80px' }}>
+      <Grid container spacing={2} sx={{ p: 2, pt: isOffline ? '100px' : '80px' }}>
         {filteredProdutos.length === 0 ? (
           <Typography sx={{ p: 2 }} variant="body1" align="center" color="text.secondary">
             Nenhum produto encontrado ou sem conexão.

@@ -24,6 +24,7 @@ const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [produto, setProduto] = useState<Produto | null>(null);
   const [loading, setLoading] = useState(true);
+  const [errorOffline, setErrorOffline] = useState(false); // novo estado para erro offline
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -31,8 +32,20 @@ const ProductDetail = () => {
       try {
         const response = await api.get(`/products/${id}`);
         setProduto(response.data);
-      } catch (error) {
+        setErrorOffline(false);
+      } catch (error: any) {
         console.error('Erro ao buscar produto:', error);
+
+        // Aqui detecta erro de conexão offline pelo código ou mensagem
+        if (
+          !error.response &&
+          (error.message.includes('Network Error') || error.message.includes('offline'))
+        ) {
+          setErrorOffline(true);
+        } else {
+          setErrorOffline(false);
+          setProduto(null); // produto não encontrado ou erro geral
+        }
       } finally {
         setLoading(false);
       }
@@ -53,6 +66,48 @@ const ProductDetail = () => {
         }}
       >
         <CircularProgress sx={{ color: '#fff' }} />
+      </Box>
+    );
+  }
+
+  if (errorOffline) {
+    return (
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          px: 2,
+          backgroundColor: '#fffbe6', // amarelo claro
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: '#fff3cd', // amarelo balão
+            border: '1px solid #ffeeba',
+            borderRadius: 2,
+            padding: 3,
+            maxWidth: 400,
+            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+            textAlign: 'center',
+          }}
+        >
+          <Typography variant="h6" color="#856404" gutterBottom>
+            Parece que você está offline.
+          </Typography>
+          <Typography variant="body2" color="#856404" mb={2}>
+            Não foi possível carregar os dados do produto. Verifique sua conexão e tente novamente.
+          </Typography>
+          <Button
+            variant="contained"
+            color="warning"
+            onClick={() => window.location.reload()}
+            sx={{ textTransform: 'none' }}
+          >
+            Tentar novamente
+          </Button>
+        </Box>
       </Box>
     );
   }
