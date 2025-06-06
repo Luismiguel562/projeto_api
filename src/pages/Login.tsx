@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -7,23 +7,30 @@ import {
   InputAdornment,
   Checkbox,
   FormControlLabel,
-  Link,
   Alert,
   Paper,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import LockIcon from '@mui/icons-material/Lock';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [username, setUsername] = useState('johnd');
   const [password, setPassword] = useState('m38rmF$');
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Captura erro vindo da rota privada
+  useEffect(() => {
+    if (location.state?.error) {
+      setError(location.state.error);
+    }
+  }, [location.state]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,37 +109,18 @@ const Login = () => {
                 onChange={(e) => setRememberMe(e.target.checked)}
               />
             }
-            label="Lembrar-me"
+            label="Lembrar de mim"
             sx={{ mt: 1 }}
           />
 
           <Button
-            type="submit"
             fullWidth
+            type="submit"
             variant="contained"
-            sx={{ mt: 3, py: 1.5, fontWeight: 'bold' }}
+            sx={{ mt: 3, backgroundColor: '#0D1B2A', '&:hover': { backgroundColor: '#1B263B' } }}
           >
-            ENTRAR
+            Entrar
           </Button>
-
-          <Box textAlign="center" mt={3}>
-            <Link
-              href="#"
-              underline="hover"
-              sx={{
-                color: '#0D1B2A',
-                fontWeight: 'medium',
-                fontSize: '0.95rem',
-                transition: '0.3s',
-                '&:hover': {
-                  color: '#1E88E5',
-                  fontWeight: 'bold',
-                },
-              }}
-            >
-              Esqueceu sua senha?
-            </Link>
-          </Box>
         </form>
       </Paper>
     </Box>

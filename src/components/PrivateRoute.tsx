@@ -1,4 +1,4 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 interface Props {
@@ -7,8 +7,19 @@ interface Props {
 
 const PrivateRoute = ({ children }: Props) => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
 
-  return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
+  if (!isAuthenticated) {
+    return (
+      <Navigate
+        to="/"
+        state={{ error: 'Você precisa estar logado para acessar esta página.' }}
+        replace
+      />
+    );
+  }
+
+  return <>{children}</>;
 };
 
 export default PrivateRoute;
