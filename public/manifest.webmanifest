@@ -1,0 +1,21 @@
+{
+  "name": "FakeStore API",
+  "short_name": "Store",
+  "description": "App da FakeStore com produtos detalhes e login",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0D1B2A",
+  "theme_color": "#1B263B",
+  "icons": [
+    {
+      "src": "/vite.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/vite.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
