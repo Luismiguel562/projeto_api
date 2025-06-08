@@ -67,7 +67,7 @@ const Login = () => {
           gutterBottom
           sx={{ fontFamily: "'Pacifico', cursive", color: '#0D1B2A' }}
         >
-          AppStore
+          FakeStore API
         </Typography>
 
         {error && (

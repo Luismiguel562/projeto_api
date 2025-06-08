@@ -7,26 +7,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      manifest: {
-        name: 'AppStore',
-        short_name: 'AppStore',
-        start_url: '/',
-        display: 'standalone',
-        background_color: '#0D1B2A',
-        theme_color: '#1B263B',
-        icons: [
-          {
-            src: 'pwa-icon-192.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: 'pwa-icon-512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
-        ],
-      },
+      manifest: false, // Isso indica que o arquivo externo será usado
+      srcDir: 'src',
+      filename: 'sw.ts',
       workbox: {
         runtimeCaching: [
           {

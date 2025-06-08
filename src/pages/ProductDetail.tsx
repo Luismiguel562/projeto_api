@@ -36,16 +36,20 @@ const ProductDetail = () => {
       } catch (error: any) {
         console.error('Erro ao buscar produto:', error);
 
-        // Aqui detecta erro de conexão offline pelo código ou mensagem
-        if (
-          !error.response &&
-          (error.message.includes('Network Error') || error.message.includes('offline'))
-        ) {
-          setErrorOffline(true);
-        } else {
-          setErrorOffline(false);
-          setProduto(null); // produto não encontrado ou erro geral
+        // Se offline, tenta buscar no cache
+        const cache = localStorage.getItem('produtosCache');
+        if (cache) {
+          const produtos: Produto[] = JSON.parse(cache);
+          const produtoOffline = produtos.find((p) => p.id === Number(id));
+          if (produtoOffline) {
+            setProduto(produtoOffline);
+            setErrorOffline(false);
+            return;
+          }
         }
+
+        // Se não achou no cache ou erro não relacionado à conexão
+        setErrorOffline(true);
       } finally {
         setLoading(false);
       }

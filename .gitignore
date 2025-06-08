@@ -13,6 +13,8 @@ dist-ssr
 *.local
 yarn.lock
 desktop.ini
+tsconfig.tsbuildinfo
+dev-dist
 
 # Editor directories and files
 .vscode/*
