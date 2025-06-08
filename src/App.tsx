@@ -4,6 +4,7 @@ import ProductDetail from './pages/ProductDetail';
 import Login from './pages/Login';
 import PrivateRoute from './components/PrivateRoute';
 import React, { useState, useEffect } from 'react';
+import { CssBaseline, GlobalStyles } from '@mui/material'
 
 function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -22,6 +23,27 @@ function App() {
 
   return (
     <>
+      <CssBaseline />
+      <GlobalStyles
+        styles={{
+          '*': {
+            margin: 0,
+            padding: 0,
+            boxSizing: 'border-box',
+          },
+          html: {
+            height: '100%',
+          },
+          body: {
+            background: 'linear-gradient(135deg, #0D1B2A, #1B263B)',
+            height: '100%',
+          },
+          '#root': {
+            height: '100%',
+          }
+        }}
+      />
+      
       {!isOnline && (
         <div
           style={{
