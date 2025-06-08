@@ -62,7 +62,6 @@ const ProductDetail = () => {
           justifyContent: 'center',
           mt: 5,
           minHeight: '100vh',
-          backgroundColor: '#007bff',
         }}
       >
         <CircularProgress sx={{ color: '#fff' }} />
@@ -137,7 +136,6 @@ const ProductDetail = () => {
         maxWidth: 500,
         mx: 'auto',
         minHeight: '100vh',
-        backgroundColor: '#0D1B2A',
         color: '#fff',
       }}
     >
