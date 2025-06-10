@@ -136,6 +136,10 @@ const ProductDetail = () => {
   return (
     <Box
       sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'start',
+        justifyContent: 'center',
         p: 2,
         maxWidth: 500,
         mx: 'auto',
@@ -146,6 +150,7 @@ const ProductDetail = () => {
       <Button
         variant="outlined"
         sx={{
+          alignItems: 'start',
           borderColor: '#fff',
           color: '#fff',
           mb: 2,
