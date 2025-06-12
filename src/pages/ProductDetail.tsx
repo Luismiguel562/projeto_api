@@ -36,7 +36,7 @@ const ProductDetail = () => {
       } catch (error: any) {
         console.error('Erro ao buscar produto:', error);
 
-        // Se offline, tenta buscar no cache
+        // Se offline, tenta buscar no cache os produtos
         const cache = localStorage.getItem('produtosCache');
         if (cache) {
           const produtos: Produto[] = JSON.parse(cache);

@@ -63,6 +63,7 @@ const Produtos = () => {
 
     fetchProdutos();
 
+    //aqui se verifica se esta online ou offline
     const handleOnline = () => {
       setIsOffline(false);
       fetchProdutos();
