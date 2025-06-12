@@ -1,6 +1,6 @@
 Projeto de Autenticação com JWT e Lista de Produtos
 
-Este projeto é uma aplicação React com TypeScript que permite aos usuários fazer login utilizando JWT (JSON Web Token) e visualizar uma lista de produtos protegida por autenticação. A autenticação é feita com Context API, e as rotas privadas são protegidas com React Router.
+Este projeto é uma aplicação React com TypeScript que permite aos usuários fazer login utilizando JWT (JSON Web Token) e visualizar uma lista de produtos protegida por autenticação. A autenticação é feita com Context API, e as rotas privadas são protegidas com React Router, e foi implementado PWA com modo offilne.
 
 💻 Tecnologias Utilizadas
 	•	React + TypeScript
@@ -20,4 +20,3 @@ Este projeto é uma aplicação React com TypeScript que permite aos usuários f
 
 3. Inicie a aplicação
  npm run dev ou yarn dev 
-

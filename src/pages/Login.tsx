@@ -43,11 +43,9 @@ const Login = () => {
     }
   };
 
-  // Função para "Esqueci minha senha"
+  
   const handleForgotPassword = (e: React.MouseEvent) => {
     e.preventDefault();
-    alert('Aqui você pode implementar a recuperação de senha.');
-    // Exemplo: redirecionar -> navigate('/recuperar-senha');
   };
 
   return (

@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      manifest: false, // Isso indica que o arquivo externo será usado
+      manifest: false, // Isso indica que o arquivo externo será usado para o manifesto do PWA
       srcDir: 'src',
       filename: 'sw.ts',
       workbox: {
@@ -19,7 +19,7 @@ export default defineConfig({
               cacheName: 'api-cache',
               expiration: {
                 maxEntries: 50,
-                maxAgeSeconds: 300, // 5 minutos
+                maxAgeSeconds: 300,
               },
             },
           },
